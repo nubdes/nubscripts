@@ -1,0 +1,34 @@
+mapname,100,113,3	script	Healer2	100,{
+
+if (HEALDELAY > gettimetick(2)) {
+	mes "There is a delay to heal again."; 
+	mes "" + callfunc("Time2Str" ,HEALDELAY);
+close; 
+}
+
+set .@price,780;
+set .@delay,5;
+
+	if( BaseLevel <= 50) {
+	mes "You are lvl 50 below so you will recieve a buffs and its free";
+	next;
+		specialeffect2 EF_HEAL2; percentheal 100,100;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,1800000, 10;
+		specialeffect2 EF_INCAGILITY; sc_start SC_INCREASEAGI,1800000,10;
+	close;
+	}else{
+	if( BaseLevel < 90) {
+	mes "You are lvl 90 below so you will recieve a free heal";
+	next;
+		specialeffect2 EF_HEAL2; percentheal 100,100;
+	close;
+	}else{
+	mes "You are lvl 90+ so you will be deducted a 1,000 zeny";
+	next;
+		set Zeny,Zeny-.@price;
+		specialeffect2 EF_HEAL2; percentheal 100,100;
+		set HEALDELAY,gettimetick(2)+.@delay;
+	close;
+		}
+	}
+}
