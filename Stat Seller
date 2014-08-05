@@ -1,0 +1,11 @@
+prontera,150,150,3	script	Stat Seller	100,{
+
+	mes "How many Status Point you want to purchase ?";
+	mes "1 Point = 300,000 Zeny.";
+	mes "You have "+Zeny+" Zeny , can purchase "+( Zeny / 300000 )+" Points.";
+input .@i,0,( Zeny / 300000 );
+	mes "You purchased "+.@i+" Points.";
+	set StatusPoint,StatusPoint + 1;
+	set Zeny,Zeny - ( 300000 * .@i );
+close;
+}
