@@ -1,0 +1,147 @@
+// ---------------------------------------------- //
+// Simple Currency Exchanger by [NubDes]	 	  //
+// v1.0 not a Free Release						  //
+// ---------------------------------------------- //
+
+geass,100,110,3	script	EventTest	100,{
+
+// ----------------------------------
+// Some configurations need to set
+// ----------------------------------
+// Npc name
+	set .@mynpc$,"[^DC143C Curreny Exchanger ^000000]";
+	
+// Curreny ID's
+	set .@currency_id,7227;
+
+// Zeny to convert per currency
+	set .@currency_value,20000;
+// Hex Color
+	setarray .color$[0],"^000000","00FF00";
+// ----------------------------------
+	
+	mes .@mynpc$;
+	mes " ";
+	mes "Hello, "+strcharinfo(0)+".";
+	mes "What do you want to exchange?";
+	next;
+switch(select("- "+getitemname(.@currency_id)+" to Zeny:- Zeny to "+getitemname(.@currency_id)+":Nothing")) {
+
+	case 1:
+	input @amount;
+	if(@amount <= 0) {
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CPlease input atleast greater than 0.^000000";
+		end;
+	} else if(countitem(.@currency_id) < @amount) {
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CI'm Sorry, but you do not have enough [ "+@amount+" ] [ "+getitemname(.@currency_id)+" ] to exchange.^000000";
+		end;
+	} else {
+	if(Zeny >= 900000000) goto L_FullZeny;
+		delitem .@currency_id,@amount;
+		set Zeny,Zeny+(.@currency_value * @amount);
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CDeducted^000000 : "+@amount+" "+getitemname(.@currency_id)+".";
+		mes "^009900Recieved^000000 : "+( .@currency_value * @amount )+"Z.";
+		goto L_Pleasure;
+		end;
+    }
+	close;
+	
+	// Zeny to Currency
+	case 2:
+	input @amount;
+	if(@amount <= 0) {
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CPlease input atleast greater than 0.^000000";
+		end;
+    } else if(Zeny < .@currency_value*@amount){
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CI'm sorry, but you do not have atleast [ "+.@currency_value*@amount+"z ] to exchange.^000000";
+		end;
+    } else {
+		if(!checkweight(.@currency_id,@amount)) goto L_Over;
+		set Zeny,Zeny-(.@currency_value * @amount);
+		getitem .@currency_id,@amount;
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CDeducted^000000 : "+( .@currency_value * @amount )+"Z.";
+		mes "^009900Recieved^000000 :  "+@amount+" "+getitemname(.@currency_id)+".";
+		goto L_Pleasure;
+    }
+	close;
+	
+	// Nothing is here just close the convo.
+	case 3:
+		close;
+	}
+	close2;
+	
+	
+L_NutEnuf:
+	next;
+	mes .@mynpc$;
+	mes " ";
+	mes "^DC143CI'm sorry, but it seems that you do not have atleast 1 "+getitemname(.@currency_id)+".^000000";
+	close;
+L_FullZeny:
+	next;
+	mes .@mynpc$;
+	mes " ";
+	mes "^DC143CI'm sorry, but I can't allow you to do transaction at this moment if you are carrying over";
+	mes "[ 900M Zeny. ]^000000";
+	close;
+
+L_Pleasure:
+	next;
+	mes .@mynpc$;
+	mes " ";
+	mes "^336699Thank you, it's a pleasure to do business with you.^000000";
+	close;
+	
+L_Over:
+	next;
+	mes .@mynpc$;
+	mes " ";
+	mes "^DC143CI'm sorry, but you can't carry this due to weight restrictions^000000";
+	close;
+}
+
+
+// Just in case ---------------------------------------------------------
+/*
+L_ZtoC:
+	input @amount,0,countitem(.@currency_id);
+	if(countitem(.@currency_id) < 1) goto L_NutEnuf;
+	delitem .@currency_id,@amount;
+	set Zeny,Zeny+(.@currency_value * @amount);
+	next;
+	mes .@mynpc$;
+	mes "Successfully traded your shit to my shit";
+	close;
+
+L_CtoZ:	
+	input @amount,0,( Zeny / .@currency_value );
+	if(.@amount < 1) goto L_NutEnuf;
+	set Zeny,Zeny-(.@currency_value * @amount);
+	getitem .@currency_id,@amount;
+	mes .@mynpc$;
+	mes "Successfully traded your shit to my shit";
+	close;
+	
+L_NutEnuf:
+	next;
+	mes .@mynpc$;
+	mes "Sorry but it seems that you are lack of requirements to exchange.";
+	mes "Please come back after you have something to trade.";
+	close;
+L_FullZeny:
+	mes "Full Zeny";
+}
+*/
