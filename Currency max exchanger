@@ -1,0 +1,37 @@
+dressroba,106,72,3	script	Badges Exchanger	56,{
+
+//20080
+
+set .@to_use,969;
+set .@to_exchange,20080;
+set .@mynpc$,"[ Gold to Credit Exchanger ]";
+
+
+	mes .@mynpc$;
+	mes "Hi, What would you like to do?";
+	mes " ";
+	mes "You have ^FF2400"+countitem(.@to_use)+"^000000 "+getitemname(.@to_use)+".";
+	mes " ";
+	mes "Our Exchange rate is ^FF24002^000000 "+getitemname(.@to_use)+" = ^FF24001^000000 "+getitemname(.@to_exchange)+".";
+	next;
+	mes "Proceed";
+	switch(select("Exchange my Gold..:Cancel")) {
+	case 1:
+		next;
+		input @amount,0,( countitem(969) / 2);
+		if (countitem(.@to_use) < @amount*2);
+		delitem .@to_use,@amount*2;
+		getitem .@to_exchange,@amount;
+		mes .@mynpc$;
+		mes " ";
+		mes "Successfully converted of ^FF2400"+(@amount * 2)+"^000000 ^FF2400"+getitemname(.@to_use)+"^000000 into ^FF2400"+@amount+"^000000 ^FF2400"+getitemname(.@to_exchange)+"^000000.";
+		close;
+	case 2:
+		close;
+		
+	L_NE:
+		mes "I'm sorry but it seems that you don't have enough "+getitemname(.@to_use)+" in your inventory";
+		mes "You only have "+countitem(.@to_use)+" "+getitemname(.@to_use)+".";
+		close;
+	}
+}
