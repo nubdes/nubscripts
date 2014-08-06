@@ -1,0 +1,54 @@
+dressroba,106,72,3	script	Badges Exchanger	56,{
+
+//20080
+
+set .@mynpc$,"[ Gold to Credit Exchanger ]";
+set .@to_use,969;
+set .@to_exchange,20080;
+
+
+	mes .@mynpc$;
+	mes "Hi, What would you like to do?";
+	mes " ";
+	mes "You have ^FF2400"+countitem(.@to_use)+"^000000 "+getitemname(.@to_use)+".";
+	mes "Our Exchange rate is ^FF24002^000000 "+getitemname(.@to_use)+" = ^FF24001^000000 "+getitemname(.@to_exchange)+".";
+	next;
+	mes "Proceed";
+	next;
+	switch(select("Exchange my Gold..:Cancel")) {
+case 1:
+		input @amount;
+	if(@amount <= 0) {
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CPlease input atleast greater than 0.^000000";
+		end;
+    } else if(countitem(.@to_use) < @amount*2){
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CYou don't have atleast [ "+@amount/2+" ] "+getitemname(.@to_use)+" to exchange.^000000";
+		end;
+    } else {
+		if(!checkweight(.@to_use,@amount*2)) goto L_Over;
+		delitem .@to_use,@amount*2;
+		getitem .@to_exchange,@amount;
+		mes .@mynpc$;
+		mes " ";
+		mes "^DC143CDeducted^000000 : "+2*@amount+" "+getitemname(.@to_use)+".";
+		mes "^009900Recieved^000000 :  "+@amount+" "+getitemname(.@to_exchange)+".";
+		//goto L_Pleasure;
+    }
+	close;
+	
+	// Nothing is here just close the convo
+	case 2:
+		close;
+		
+	}
+L_Over:
+	next;
+	mes .@mynpc$;
+	mes " ";
+	mes "^DC143CI'm sorry, but you can't carry this due to weight restrictions^000000";
+	close;
+}
